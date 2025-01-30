@@ -1,0 +1,8 @@
+# Install dependencies 
+pip install flask scikit-learn numpy
+
+# run the flask server 
+python3 model.py
+
+# test with 
+curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"input": [3, 4, 5]}'

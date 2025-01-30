@@ -1,0 +1,21 @@
+# Create a Dockerfile and inside that file paste this 
+FROM python:3.9
+
+WORKDIR /app
+
+COPY model.py model.py
+COPY model.pkl model.pkl
+
+RUN pip install flask scikit-learn numpy
+
+CMD ["python3", "model.py"]
+
+# Build and run the Docker container 
+docker build -t ml_model .
+docker run -p 5000:5000 ml_model
+
+# test it with 
+curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"input": [3, 4, 5]}'
+ 
+
+

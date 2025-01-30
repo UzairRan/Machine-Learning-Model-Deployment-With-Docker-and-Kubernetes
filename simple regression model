@@ -1,0 +1,33 @@
+#  Build a Simple Machine Learning Model
+
+mkdir ml_deploy && cd ml_deploy
+# CREATE model.py file 
+import pickle
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from flask import Flask, request, jsonify
+
+# Train a simple model
+X = np.array([[0], [1], [2], [3], [4], [5]])
+y = np.array([0, 0, 0, 1, 1, 1])
+model = LogisticRegression()
+model.fit(X, y)
+
+# Save the model
+with open("model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+# Flask app for API
+app = Flask(__name__)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+    X_test = np.array(data["input"]).reshape(-1, 1)
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
+    prediction = model.predict(X_test).tolist()
+    return jsonify({"prediction": prediction})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
